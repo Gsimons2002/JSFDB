@@ -1,5 +1,9 @@
+const express = require('express'); // Express framework
+const request = require('request'); // Express framework
+const app = express();
 
 let session = require('express-session');
+
 // Set up session with express
 app.use(session({
 	secret: 'secret',
@@ -583,6 +587,18 @@ var options = {
     'User-Agent': 'request'
   }
 };
+
+//selct Character
+app.get('selectCharacter', function(err, results){
+	db.all('SELECT * FROM jsf_fighters WHERE fighter_player_UID = \'' + request.session.accUID + '\';', function(err, results) {
+		response.status(200).render('modify', {
+				username: request.session.username,
+				accountUID: request.session.accUID,
+				darkmode: request.session.darkmode,
+				fighters: results
+		});
+	});
+});
 
 //github test
 app.get('/api/v0/github', function(req, res) {
