@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 //Set up web folders
 app.use(express.static("public"));
-
+//tells server to wait for a connection
 app.listen(3001, function() {
 	console.log('Listening on port ' + 3001 + '.');
 });
@@ -73,7 +73,7 @@ app.get('/login', function(request, response) {
 });
 
 
-
+//sets path to to loggin screen
 app.post('/auth', function(request, response) {
 	let username = request.body.username;
 	let password = request.body.password;
@@ -103,7 +103,7 @@ app.post('/auth', function(request, response) {
 		response.end();
 	}
 });
-
+//sets home page
 app.get('/home', function(request, response) {
 	// response.sendFile(path.join(__dirname + '/public/home.html'));
 	if (request.session.loggedin) {
@@ -126,7 +126,7 @@ app.get('/editor', function(request, response) {
 		darkmode: request.session.darkmode
 	});
 });
-
+//set path to create account
 app.get('/create', function(request, response) {
 	response.status(200).render('create', {
 			username: request.session.username,
@@ -134,7 +134,7 @@ app.get('/create', function(request, response) {
 			darkmode: request.session.darkmode
 	});
 });
-
+//sets path to modify account
 app.get('/modify', function(request, response) {
 	db.get('SELECT account_UID FROM jsf_account WHERE username = \'' + request.session.username + '\';', function(err, results) {
 		if (err) {
@@ -154,7 +154,7 @@ app.get('/modify', function(request, response) {
 	});
 });
 
-
+//sets path to createFighter
 app.post('/createFighter', function(request, response) {
 	if (request.session.username != undefined) {
 
@@ -178,7 +178,7 @@ app.post('/createFighter', function(request, response) {
 		response.send("You aren't logged in");
 	}
 });
-
+//sets path to modifyFighter
 app.post('/modifyFighter', function(request, response) {
 	if (request.session.username != undefined) {
 
@@ -198,7 +198,7 @@ app.post('/modifyFighter', function(request, response) {
 		response.send("You aren't logged in");
 	}
 });
-
+// deletes fighter
 app.post('/deleteFighter', function(request, response) {
 	if (request.session.username != undefined) {
 				db.get('DELETE FROM jsf_fighters WHERE fighter_player_UID = \'' + request.session.accUID + '\' AND fighter_name = \'' + request.body.name + '\';', function(err) {
@@ -217,7 +217,7 @@ app.post('/deleteFighter', function(request, response) {
 	}
 });
 
-
+//creates path to the game selection
 app.get('/game', function(request, response) {
 	response.status(200).sendFile(path.join(__dirname + '/public/JSFighter/index.html'));
 	console.log(request.session.username + " joined the game.");
@@ -230,7 +230,7 @@ app.get('/play', function(request, response) {
 		darkmode: request.session.darkmode
 	});
 });
-
+// path to the settings
 app.get('/settings', function(request, response) {
 	response.status(200).render('settings', {
 		username: request.session.username,
@@ -238,7 +238,7 @@ app.get('/settings', function(request, response) {
 		darkmode: request.session.darkmode
 	});
 });
-
+//creates path to the JSF game
 app.get('/jsfighterGame', function(request, response) {
 	response.status(200).render('jsfighterGame', {
 		username: request.session.username,
@@ -246,7 +246,7 @@ app.get('/jsfighterGame', function(request, response) {
 		darkmode: request.session.darkmode
 	});
 });
-
+//to create the account
 app.get('/accountCreation', function(request, response) {
 	response.status(200).render('account');
 });
@@ -588,7 +588,7 @@ var options = {
   }
 };
 
-//selct Character
+//selct Character from current player's id
 app.get('selectCharacter', function(err, results){
 	db.all('SELECT * FROM jsf_fighters WHERE fighter_player_UID = \'' + request.session.accUID + '\';', function(err, results) {
 		response.status(200).render('modify', {
